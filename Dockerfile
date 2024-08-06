@@ -13,13 +13,10 @@ RUN apt-get update && apt-get install -y \
   libmagickcore-dev \
   nodejs
 
-# RUN apt-get update && apt-get install -y \
-
-#   awscli
-
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN gem install --no-document \
+  bundler:2.4.22 \
   rubocop:1.56.0 \
   rubocop-rspec:2.8.0 \
   activesupport:5.2.8 \
@@ -29,6 +26,15 @@ RUN gem install --no-document \
   simplecov-buildkite
 
 WORKDIR /app
+
+RUN ARCH=$(uname -m); \
+  if [ "$ARCH" = "x86_64" ]; then \
+  curl -L https://github.com/buildkite/test-splitter/releases/download/v0.8.0/test-splitter_0.8.0_linux_amd64 -o /usr/local/bin/test-splitter; \
+  elif [ "$ARCH" = "aarch64" ]; then \
+  curl -L https://github.com/buildkite/test-splitter/releases/download/v0.8.0/test-splitter_0.8.0_linux_arm64 -o /usr/local/bin/test-splitter; \
+  fi && \
+  chmod +x /usr/local/bin/test-splitter
+
 
 COPY . /app
 
