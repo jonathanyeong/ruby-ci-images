@@ -11,7 +11,9 @@ RUN apt-get update && apt-get install -y \
   imagemagick \
   libmagickwand-dev \
   libmagickcore-dev \
-  nodejs
+  nodejs \
+  awscli \
+  libyaml-dev
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
